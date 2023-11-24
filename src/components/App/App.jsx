@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component, useState, useEffect } from 'react';
 import SearchBar from 'components/SearchBar/Searchbar';
 import { getImageWithQuery } from 'pixabayApi/pixabayApi';
 import Button from 'components/Button/Button';
@@ -6,7 +6,50 @@ import Modal from 'components/Modal/Modal';
 import { Loader } from 'components/Loader/Loader';
 import ImageGallery from 'components/ImageGallery/ImageGallery';
 import css from './App.module.css';
-class App extends Component {
+
+const App = () => {
+  const [query, setQuery] = useState('');
+  const [gallery, setgallery] = useState([]);
+  const [page, setPage] = useState(1);
+  const [error, setError] = useState(null);
+  const [loadMore, setLoadMore] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [largeImage, setLargeImage] = useState('');
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    createGallery();
+  }, [query, page]);
+
+  const createGallery = async () => {
+    setIsLoading(true);
+
+    try {
+      const { hits, totalHits } = await getImageWithQuery(query, page);
+
+      if (hits.length === 0) {
+        setgallery([]);
+        setError('Sorry, you are entering an incorrect value');
+        setIsLoading(false);
+        return;
+      }
+
+      setgallery(prevState => [...prevState, ...hits]);
+      setLoadMore(page < Math.ceil(totalHits / 12));
+      setError(null);
+      isLoading(false);
+    } catch (error) {
+      console.error('Error in createGallery:', error);
+      setgallery([]);
+      setError('Something is wrong with the request address'.toUpperCase());
+      setIsLoading();
+    }
+  };
+
+  return <div>App</div>;
+};
+
+class Apps extends Component {
   state = {
     query: '',
     gallery: [],
