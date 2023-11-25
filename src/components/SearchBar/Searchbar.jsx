@@ -1,46 +1,39 @@
-import React, { Component } from 'react';
+import { useState } from 'react';
 import { ImSearch } from 'react-icons/im';
 import css from './SearchBar.module.css';
 import PropTypes from 'prop-types';
-class SearchBar extends Component {
-  state = {
-    value: '',
+const SearchBar = ({ onSubmit }) => {
+  const [value, setValue] = useState('');
+
+  const handleChange = ({ target }) => {
+    setValue(target.value);
   };
 
-  handleChange = ({ target }) => {
-    this.setState({
-      value: target.value,
-    });
-  };
-
-  handleSubmit = e => {
+  const handleSubmit = e => {
     e.preventDefault();
 
-    const { value } = this.state;
-    this.props.onSubmit(value);
-    this.setState({ value: '' });
+    onSubmit(value);
+    setValue('');
   };
 
-  render() {
-    return (
-      <header className={css.header}>
-        <form className={css.form} onSubmit={this.handleSubmit}>
-          <button className={css.btn}>
-            <ImSearch />
-            <span className={css.btnLabel}>Search</span>
-          </button>
-          <input
-            className={css.inp}
-            onChange={this.handleChange}
-            type="text"
-            value={this.state.value}
-            placeholder="Search images and photos"
-          />
-        </form>
-      </header>
-    );
-  }
-}
+  return (
+    <header className={css.header}>
+      <form className={css.form} onSubmit={handleSubmit}>
+        <button className={css.btn}>
+          <ImSearch />
+          <span className={css.btnLabel}>Search</span>
+        </button>
+        <input
+          className={css.inp}
+          onChange={handleChange}
+          type="text"
+          value={value}
+          placeholder="Search images and photos"
+        />
+      </form>
+    </header>
+  );
+};
 
 export default SearchBar;
 
