@@ -35,6 +35,7 @@ const App = () => {
         setGallery(prevState => {
           return [...prevState, ...hits];
         });
+
         setLoadMore(page < Math.ceil(totalHits / 12));
         setError(null);
         setIsLoading(false);
@@ -49,6 +50,8 @@ const App = () => {
 
   const handleFormSubmite = query => {
     setQuery(query);
+    setPage(1);
+    setGallery([]);
   };
 
   const togleModal = () => {
